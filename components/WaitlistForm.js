@@ -37,7 +37,7 @@ export default function WaitlistForm({ handleSubmit }) {
           Thanks for joining the waitlist!
         </h3>
         <p className="text-center text-green-600">
-          We'll notify you when XStats is ready.
+          {"We'll notify you when XStats is ready."}
         </p>
       </div>
     );

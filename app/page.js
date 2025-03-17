@@ -3,7 +3,7 @@ import WaitlistForm from '../components/WaitlistForm';
 import LandingHeader from '../components/LandingHeader';
 import FeatureHighlights from '../components/FeatureHighlights';
 import LandingFooter from '../components/LandingFooter';
-import { getSEOTags, renderSchemaTags } from "../libs/seo";
+import { getSEOTags } from "../libs/seo";
 
 export const metadata = getSEOTags({
   title: "XStats - Track Your X Growth",
