@@ -1,45 +1,61 @@
-import Link from "next/link";
-import ButtonSignin from "@/components/ButtonSignin";
+import { createClient } from '../libs/supabase/server';
+import WaitlistForm from '../components/WaitlistForm';
+import LandingHeader from '../components/LandingHeader';
+import FeatureHighlights from '../components/FeatureHighlights';
+import LandingFooter from '../components/LandingFooter';
+import { getSEOTags, renderSchemaTags } from "../libs/seo";
 
-export default function Page() {
+export const metadata = getSEOTags({
+  title: "XStats - Track Your X Growth",
+  description: "Sign up for early access to XStats, your comprehensive analytics platform for X!",
+  canonicalUrlRelative: "/",
+});
+
+export default function Home() {
+  async function handleSubmit(formData) {
+    'use server'; // Server Directive for Server Actions
+    const email = formData.get('email');
+    const supabase = createClient();
+    
+    const { error } = await supabase
+      .from('leads')
+      .insert({ email });
+    
+    if (error) {
+      console.error('Error:', error.message);
+      return { success: false, message: error.message };
+    }
+    
+    return { success: true, message: 'Thanks for joining the waitlist!' };
+  }
+
   return (
     <>
-      <header className="p-4 flex justify-end max-w-7xl mx-auto">
-        <ButtonSignin text="Login" />
-      </header>
-      <main>
-        <section className="flex flex-col items-center justify-center text-center gap-12 px-8 py-24">
-          <h1 className="text-3xl font-extrabold">Ship Fast ⚡️</h1>
-
-          <p className="text-lg opacity-80">
-            The start of your new startup... What are you gonna build?
+    <LandingHeader />
+    <main>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white px-4 pt-16 pb-12">
+        <div className="max-w-md w-full p-8 bg-white rounded-xl shadow-lg border border-gray-100">
+          <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
+            XStats
+          </h1>
+          <h2 className="text-xl font-medium text-center text-blue-600 mb-6">
+            Track Your X Growth
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Sign up for early access to XStats, your comprehensive analytics platform for X!
           </p>
-
-          <a
-            className="btn btn-primary"
-            href="https://shipfa.st/docs"
-            target="_blank"
-          >
-            Documentation & tutorials{" "}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-
-          <Link href="/blog" className="link link-hover text-sm">
-            Fancy a blog?
-          </Link>
-        </section>
-      </main>
+          
+          <WaitlistForm handleSubmit={handleSubmit} />
+          
+          <p className="text-center text-gray-500 text-sm mt-6">
+            Be the first to know when we launch. No spam, ever.
+          </p>
+        </div>
+      </div>
+      
+      <FeatureHighlights />
+      <LandingFooter />
+    </main>
     </>
   );
 }
